@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Introduction to TargetDecoy</title>
+
+<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+.sourceCode .row {
+  width: 100%;
+}
+.sourceCode {
+  overflow-x: auto;
+}
+.code-folding-btn {
+  margin-right: -30px;
+}
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">PDA</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-chalkboard-teacher"></span>
+     
+    Topics
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="assets/martens_protein_identification.pdf">1.1. Protein Identification</a>
+    </li>
+    <li>
+      <a href="assets/martens_data_sharing.pdf">1.2. Data Sharing</a>
+    </li>
+    <li>
+      <a href="TargetDecoy.html">2.1. Identification - FDR - QC</a>
+    </li>
+    <li>
+      <a href="pda_quantification_preprocessing.html">2.2.1. Quantification - Preprocessing</a>
+    </li>
+    <li>
+      <a href="pda_robustSummarisation_peptideModels.html">2.2.2. Wrap-up Preprocessing - Peptide-Level-Models</a>
+    </li>
+    <li>
+      <a href="pda_quantification_inference.html">2.3.1. Quantification - Differential Abundance Analysis</a>
+    </li>
+    <li>
+      <a href="pda_blocking_wrapup.html">2.3.2. Wrap-up DA - Blocking</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-laptop"></span>
+     
+    Exercises
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="https://www.compomics.com/bioinformatics-for-proteomics/">1. Bioinformatics for Proteomics</a>
+    </li>
+    <li>
+      <a href="TargetDecoyTutorial.html">2.1. Target Decoy QC</a>
+    </li>
+    <li>
+      <a href="pda_tutorialPreprocessing.html">2.2. Quantification - Preprocessing</a>
+    </li>
+    <li>
+      <a href="pda_tutorialDesign.html">2.3. Quantification - Design</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/statOmics/PDA">
+    <span class="fab fa-github"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="http://statomics.github.io/">statOmics</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+<li role="separator" class="divider"></li>
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Introduction to TargetDecoy</h1>
+<h4 class="author">Lieven Clement</h4>
+<address class="author_afil">
+Ghent University<br>
+</div>
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(TargetDecoy)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;ModSwissXT&quot;</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>hlp <span class="ot">&lt;-</span> TargetDecoy<span class="sc">:::</span><span class="fu">.getDF</span>(ModSwissXT) </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(hlp) <span class="ot">&lt;-</span> <span class="fu">names</span>(hlp) <span class="sc">%&gt;%</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str_replace</span>(<span class="at">pattern=</span><span class="st">&quot;:&quot;</span>,<span class="at">replacement=</span><span class="st">&quot;_&quot;</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>hlp <span class="ot">&lt;-</span> hlp <span class="sc">%&gt;%</span> </span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(<span class="at">omssa_evalue=</span><span class="fu">as.double</span>(omssa_evalue))</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(hlp) <span class="ot">&lt;-</span> <span class="fu">names</span>(hlp) <span class="sc">%&gt;%</span> <span class="fu">str_replace</span>(<span class="at">pattern=</span><span class="st">&quot;-&quot;</span>,<span class="at">replacement =</span> <span class="st">&quot;_&quot;</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>hlp <span class="ot">&lt;-</span> hlp <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">ms_gf_specevalue=</span><span class="fu">as.double</span>(ms_gf_specevalue))</span></code></pre></div>
+<div id="intro" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Intro</h1>
+<p>Shotgun proteomics relies on the assignment of a large number of spectra to theoretical peptides derived from a sequence database. Multiple search engines have been developed for this task, each with its own advantages and drawbacks. Most proteomics database searches are performed as so-called target/decoy searches. A crucial assumption of the target/decoy approach is that the decoy peptide-spectral match (PSM) hits have similar properties as bad target hits so that the decoys can be used to characterize the distribution of bad hits. In this tutorial we will introduce diagnostic plots that can be used to evaluate these assumptions.</p>
+<div id="basic-statistical-concepts" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Basic Statistical Concepts</h2>
+<p>We first introduce some notation. With x we denote the PSM score and we assume that larger score values indicate a better match to the theoretical spectrum. Then the scores will follow a mixture distribution:</p>
+<p><span class="math display">\[ f(x)=\pi_b f_b (x)+(1-\pi_b ) f_g(x), \]</span></p>
+<p>with <span class="math inline">\(f(x)\)</span> the target PSM score distribution, <span class="math inline">\(f_b(x)\)</span> the mixture component corresponding to incorrect PSMs, <span class="math inline">\(f_g(x)\)</span> the mixture component corresponding to the correct PSMs and <span class="math inline">\(\pi_b\)</span> the fraction of incorrect PSMs. Based on the mixture distribution we can calculate the posterior probability that a PSM with score x is a bad match:</p>
+<p><span class="math display">\[ P[\text{Bad hit} \vert \text{score }x]=\frac{\pi_b f_b (x)}{f(x)}, \]</span></p>
+<p>which is also referred to as the posterior error probability (PEP) in mass spectrometry based proteomics. Based on the mixture model, we can also calculate the posterior probability that a random PSM in the set of all PSMs with scores above a score threshold t is a bad hit (see e.g. Figure 1):</p>
+<p><span class="math display">\[ P[\text{Bad hit} \vert \text{score }x&gt;t]=\pi_b \frac{1-f_b (t)}{1-F(t)}, \]</span></p>
+<p>With <span class="math inline">\(F(t)\)</span> and <span class="math inline">\(F_b(t)\)</span> the cumulative distribution functions of all target PSMs and of the bad PSMs, respectively. Hence, <span class="math inline">\(1-F_b(t)\)</span> is the probability to observe a bad PSM hit above the threshold and, <span class="math inline">\(1-F(t)\)</span> the probability to observe a target PSM hit above the threshold. The probability <span class="math inline">\(P[\text{Bad hit} \vert \text{score }x&gt;t]\)</span> is also referred to as the false discovery rate (FDR) of the set of PSMs with scores above the threshold t. Hence, the FDR has the interpretation of the probability on a bad hit in the set of all target hits that are returned in the final PSM list.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mgcv)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loading required package: nlme</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Attaching package: &#39;nlme&#39;</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The following object is masked from &#39;package:dplyr&#39;:</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     collapse</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; This is mgcv 1.8-40. For overview type &#39;help(&quot;mgcv-package&quot;)&#39;.</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>dec <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fu">log10</span>(hlp<span class="sc">$</span>ms_gf_specevalue[hlp<span class="sc">$</span>isdecoy]) <span class="sc">%&gt;%</span> <span class="fu">na.exclude</span>()</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>tar <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fu">log10</span>(hlp<span class="sc">$</span>ms_gf_specevalue[<span class="sc">!</span>hlp<span class="sc">$</span>isdecoy]) <span class="sc">%&gt;%</span> <span class="fu">na.exclude</span>()</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>breaks <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">30</span>,.<span class="dv">5</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">#binWidth &lt;-2</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co">#breaks &lt;- seq(floor(min(c(dec,tar))/binWidth)*binWidth,ceiling(max(c(dec,tar))/binWidth)*binWidth,binWidth)</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">#code if we register the modes by substracting the mode from the target scores and  the decoy scores.</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co">#breaks=seq(-(ceiling(abs(min(c(dec,tar))/binWidth))+.5)*binWidth,(ceiling(max(c(dec,tar))/binWidth)+.5)*binWidth,binWidth)</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>histDec <span class="ot">&lt;-</span> <span class="fu">hist</span>(dec,<span class="at">breaks=</span>breaks,<span class="at">plot =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>histTar <span class="ot">&lt;-</span> <span class="fu">hist</span>(tar,<span class="at">breaks=</span>breaks,<span class="at">plot=</span><span class="cn">FALSE</span>)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>histSam <span class="ot">&lt;-</span> <span class="fu">hist</span>(<span class="fu">c</span>(dec,tar),<span class="at">breaks=</span>breaks, <span class="at">plot =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>grid<span class="ot">&lt;-</span><span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">30</span>,.<span class="dv">1</span>)</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>countsTarG<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">y=</span>histTar<span class="sc">$</span>counts<span class="sc">-</span>histDec<span class="sc">$</span>counts,<span class="at">x=</span>histTar<span class="sc">$</span>mids)</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>countsTarG<span class="sc">$</span>y[countsTarG<span class="sc">$</span>y<span class="sc">&lt;</span><span class="dv">0</span>]<span class="ot">&lt;-</span><span class="dv">0</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>fitTarG<span class="ot">&lt;-</span><span class="fu">gam</span>(y<span class="sc">~</span><span class="fu">s</span>(x),<span class="at">data=</span>countsTarG,<span class="at">family=</span>poisson)</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>fitTarGrid<span class="ot">&lt;-</span><span class="fu">exp</span>(<span class="fu">predict</span>(fitTarG,<span class="at">newdata=</span><span class="fu">data.frame</span>(<span class="at">x=</span>grid)))</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>countsDec<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">y=</span>histDec<span class="sc">$</span>counts,<span class="at">x=</span>histDec<span class="sc">$</span>mids)</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>fitDec<span class="ot">&lt;-</span><span class="fu">gam</span>(y<span class="sc">~</span><span class="fu">s</span>(x),<span class="at">data=</span>countsDec,<span class="at">family=</span>poisson)</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>fitBad<span class="ot">&lt;-</span><span class="fu">exp</span>(<span class="fu">predict</span>(fitDec,<span class="at">newdata=</span><span class="fu">data.frame</span>(<span class="at">x=</span>grid)))</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(histTar,<span class="at">xlab=</span><span class="st">&quot;MS-GF+ Score&quot;</span>,<span class="at">ylab=</span><span class="st">&quot;# PSMs&quot;</span>,<span class="at">main=</span><span class="st">&quot;Pyrococcus Search&quot;</span>,<span class="at">border=</span><span class="st">&quot;white&quot;</span>,<span class="at">col=</span><span class="st">&quot;grey&quot;</span>,<span class="at">cex.axis=</span><span class="fl">1.5</span>,<span class="at">cex.main=</span><span class="fl">1.5</span>,<span class="at">cex.lab=</span><span class="fl">1.5</span>,<span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1500</span>), <span class="at">axes =</span><span class="cn">FALSE</span>)</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="at">side=</span><span class="dv">2</span>,<span class="at">at=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">750</span>,<span class="dv">1500</span>))</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="at">side=</span><span class="dv">1</span>,<span class="at">at=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">10</span>,<span class="dv">20</span>,<span class="dv">30</span>))</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(grid,fitBad<span class="sc">+</span>fitTarGrid,<span class="at">col=</span><span class="st">&quot;black&quot;</span>,<span class="at">lwd=</span><span class="dv">2</span>)</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(grid,fitBad,<span class="at">col=</span><span class="st">&quot;red&quot;</span>,<span class="at">lwd=</span><span class="dv">2</span>)</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(grid,fitTarGrid,<span class="at">col=</span><span class="st">&quot;blue&quot;</span>,<span class="at">lwd=</span><span class="dv">2</span>)</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(histDec<span class="sc">$</span>mids,histDec<span class="sc">$</span>counts,<span class="at">col=</span><span class="st">&quot;red&quot;</span>,<span class="at">type=</span><span class="st">&quot;h&quot;</span>)</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topright&quot;</span>,<span class="at">legend=</span><span class="fu">c</span>(<span class="st">&quot;targets&quot;</span>,<span class="st">&quot;decoys&quot;</span>),<span class="at">col=</span><span class="fu">c</span>(<span class="st">&quot;grey&quot;</span>,<span class="st">&quot;red&quot;</span>), <span class="at">lty =</span><span class="fu">rep</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span></code></pre></div>
+<p><img src="TargetDecoyTutorial_files/figure-html/unnamed-chunk-1-1.png" width="432" /></p>
+<p>We would like to calculate the FDR corresponding to the set op PSMs with a target score above the threshold t. In order to calculate the FDR, we thus have to characterize the distribution of the bad hits and of all PSMs. In proteomics this is done by the use of the target/decoy approach.</p>
+</div>
+<div id="target-decoy-approach" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> Target Decoy Approach</h2>
+<p>When using a competitive target decoy search, the FDR of the set of returned PSMs is estimated by dividing the number of accepted decoys PSMs by the number of accepted target PSMs above a certain score cutoff [1].</p>
+<p><span class="math display">\[ \widehat{\text{FDR}}(t)=\frac{\# decoys | x&gt;t}{\#targets |x&gt;t} \]</span></p>
+<p>This can be rewritten as:</p>
+<p><span class="math display">\[ \widehat{\text{FDR}}(t)=\frac{\#decoys}{\#targets}\frac{\frac{\# decoys | x&gt;t}{\#decoys}}{\frac{\#targets |x&gt;t}{\#targets}} \]</span></p>
+<p><span class="math display">\[ \widehat{\text{FDR}}(t)=\hat\pi_b\frac{1-\bar{F}_0(t)}{1-\bar{F}(t)} \]</span></p>
+<p>Hence, the proportion of bad hits \( _b \) is estimated as the number of decoys divided by the number of targets, and the competitive TDA assumes that it is equally likely that a bad hit matches to a bad target or to a decoy; the probability of a (bad) target PSM hit above the threshold is estimated based on the empirical cumulative distribution in the sample, i.e. as the fraction of targets (decoys) that are above the threshold. Hence, a second assumption is that the decoy matches provide a good simulation of the target matches. See e.g. [2]. These assumptions can be evaluated with our TargetDecoy R/Bioconductor package.</p>
+</div>
+</div>
+<div id="example-msgf-search-on-swiss-prot" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Example: MSGF+ search on Swiss Prot</h1>
+<p>The Pyrococcus furiosus (strain ATCC 43587 / DSM 3638 / JCM 8422 / Vc1) reference proteome. The resulting database has 2,051 proteins in total (<a href="https://www.uniprot.org/uniprot/?query=taxonomy:186497">https://www.uniprot.org/uniprot/?query=taxonomy:186497</a>, taxonomy:“Pyrococcus furiosus (strain ATCC 43587 / DSM 3638 / JCM 8422 / Vc1) [186497]”).</p>
+<p>The data can be found on <a href="https://github.com/GTPB/PDA22/tree/data">https://github.com/GTPB/PDA22/tree/data</a>.</p>
+<p>We will use the mzid file for the pyrococcus example, which can be found at data/identification/pyrococcusMSGF+.mzid.</p>
+<ol style="list-style-type: decimal">
+<li><p>Download the code of this vignette by clicking the code button in the top of this page and downloading.</p></li>
+<li><p>Open the downloaded file in Rstudio</p></li>
+<li><p>Load libraries</p></li>
+</ol>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(TargetDecoy)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RCurl)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Attaching package: &#39;RCurl&#39;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The following object is masked from &#39;package:tidyr&#39;:</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     complete</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mzID)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Attaching package: &#39;mzID&#39;</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The following object is masked from &#39;package:dplyr&#39;:</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     id</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The following object is masked from &#39;package:purrr&#39;:</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     flatten</span></span></code></pre></div>
+<ol start="4" style="list-style-type: decimal">
+<li>Download data in your working directory. You can skip this step if you downloaded all data on your computer.</li>
+</ol>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="st">&quot;https://raw.githubusercontent.com/GTPB/PDA19/data/identification/pyrococcusMSGF%2B.mzid&quot;</span>,<span class="st">&quot;pyrococcusMSGF+.mzid&quot;</span>)</span></code></pre></div>
+<ol start="5" style="list-style-type: decimal">
+<li>Set a path to your working directory and import the mzID file in R.</li>
+</ol>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>path2File <span class="ot">&lt;-</span> <span class="st">&quot;pyrococcusMSGF+.mzid&quot;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>msgf <span class="ot">&lt;-</span> <span class="fu">mzID</span>(path2File)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; reading pyrococcusMSGF+.mzid...</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in type.convert.default(...): &#39;as.is&#39; should be specified by the caller;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; using TRUE</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in type.convert.default(...): &#39;as.is&#39; should be specified by the caller;</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; using TRUE</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in type.convert.default(...): &#39;as.is&#39; should be specified by the caller;</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; using TRUE</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in type.convert.default(...): &#39;as.is&#39; should be specified by the caller;</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; using TRUE</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in type.convert.default(...): &#39;as.is&#39; should be specified by the caller;</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; using TRUE</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in type.convert.default(...): &#39;as.is&#39; should be specified by the caller;</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; using TRUE</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in type.convert.default(...): &#39;as.is&#39; should be specified by the caller;</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; using TRUE</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in type.convert.default(...): &#39;as.is&#39; should be specified by the caller;</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; using TRUE</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in type.convert.default(...): &#39;as.is&#39; should be specified by the caller;</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; using TRUE</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in type.convert.default(...): &#39;as.is&#39; should be specified by the caller;</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; using TRUE</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in type.convert.default(...): &#39;as.is&#39; should be specified by the caller;</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; using TRUE</span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in type.convert.default(...): &#39;as.is&#39; should be specified by the caller;</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; using TRUE</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in type.convert.default(...): &#39;as.is&#39; should be specified by the caller;</span></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; using TRUE</span></span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in type.convert.default(...): &#39;as.is&#39; should be specified by the caller;</span></span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; using TRUE</span></span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  DONE!</span></span></code></pre></div>
+<ol start="6" style="list-style-type: decimal">
+<li>Launch the evalTargetDecoys Shiny Gadget. Note, that you have to erase the eval=FALSE option in order to run the code.</li>
+</ol>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evalTargetDecoys</span>(msgf)</span></code></pre></div>
+<ol start="7" style="list-style-type: decimal">
+<li>You can immediately make the plots in the script using the code below</li>
+</ol>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evalTargetDecoys</span>(msgf,<span class="st">&quot;isdecoy&quot;</span>,<span class="st">&quot;ms-gf:evalue&quot;</span>)</span></code></pre></div>
+<p><img src="TargetDecoyTutorial_files/figure-html/unnamed-chunk-6-1.png" width="432" /></p>
+<p>Two diagnostic plots are generated. A histogram of target and decoy scores (top panels) and Probability-Probability plots (PP-plots). In the histogram the shape of the decoys (red) should be equal to that of bad target hits (first mode in the target distribution indicated in green). The height of the decoys can be slightly lower than the first mode in the target distribution because some good target hits also have a low score. Here, the histogram does not indicate problems with the TDA.</p>
+<p>Deviations from the assumptions of TDA can be better evaluated in the PP-plot (lower panel). The PP-plot displays the empirical cumulative distribution (ECDF) from the target distribution in function that of the decoy distribution. PP-plots have the property that they show a straight 45 degree line through the origin if and only if both distributions are equivalent. Any deviation from this straight line indicates that the distributions differ. For targets and decoys this is obviously the case. The target distribution is stochastically larger than the decoy distribution as larger scores indicate more reliable hits and as decoys are believed to behave similarly to bad target hits. Hence, the PP-plot for targets vs decoys will always lay below the 45 degree line. When the decoys are a good simulation for the bad target hits, however, the lower values in the PP-plot should lay on a straight line that is located around <span class="math inline">\(\hat{\pi}_b\)</span>. Indeed, at small target PSM scores are most likely bad hits. The slope of the black line in the p-plot is based on the estimate of <span class="math inline">\(\hat{\pi}_b\)</span>. The first part of the PP-plot for the pyrococcus example is linear with a slope that equals <span class="math inline">\(\hat{\pi}_0\)</span>. This indicates that the decoy distribution and the mixture component for incorrect PSMs of the target mixture distribution coincide. The second part of the plot deviates from the line towards higher percentiles because the upper tail of the mixture component for incorrect subset PSMs and the lower tail of the mixture component for correct subset PSMs overlap and therefore target PSMs occur at a higher probability at intermediate scores than in the decoy distribution. Finally, the PP-plot becomes vertical, because all the decoys have been observed (decoy percentile=1) before all the scores of the target PSMs are observed. If we see this profile in the PP-plot, we have a good indication that the set of decoys from the complete search is representative for the mixture component for incorrect PSMs of the target mixture distribution. Hence, the assumptions of the concatenated TDA approach are not violated for the Pyrococcus example.</p>
+<p>When the assumptions of the concatenated TDA approach are violated, the dots in the PP-plot at lower percentiles will deviate from the $ _b$ line. In case the PP-plot is still a straight line at lower percentiles, then the shape of the decoy distribution is correct, but there are less (or more) decoys than expected under the concatenated TDA assumption, which could occur if the decoy database is different in size than the target database or when a bad hit is less likely to match to a decoy than to a target. This would also be visible in the histograms: the decoy histogram would be considerably lower (higher) than the first mode of the target distribution. When the PP-plot at lower percentiles deviates from a straight line, the distribution of decoys and the bad target PSMs is not equivalent, indicating that the decoys are not a good simulation of bad target hits. Both type of deviations should be of concern as they indicate that the FDR returned by the conventional concatenated TDA is incorrect.</p>
+</div>
+<div id="exercises" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Exercises</h1>
+<ol style="list-style-type: decimal">
+<li><p>Download all the data from <a href="https://github.com/statOmics/PDA/archive/refs/heads/data.zip">Download data</a>.</p></li>
+<li><p>Unzip the data</p></li>
+</ol>
+<div id="assess-the-search-you-performed-in-tutorial-1.-peptide-and-protein-identification-at-httpscompomics.combioinformatics-for-proteomicsidentification" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> Assess the search you performed in “Tutorial 1. Peptide and Protein Identification” at <a href="https://compomics.com/bioinformatics-for-proteomics/identification/">https://compomics.com/bioinformatics-for-proteomics/identification/</a></h2>
+<p>Open the search from tutorial 1.3. in Peptide Shaker and export the search to an mzid file by clicking export &gt; Peptide Shaker Project As &gt; mzIdentML. Evaluate the TDA for the ommsa, X!Tandem and the Peptide Shaker score.</p>
+<p>Evaluate the TDA for the X!Tandem, OMSSA and Peptide Shaker scores. What do you observe and try to explain. [1.4.a]</p>
+<ol style="list-style-type: decimal">
+<li>Complete the code below by filling out the path to your file.<br />
+Note, that you have to erase the eval=FALSE option in order to run the code.</li>
+</ol>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>path2File <span class="ot">&lt;-</span> <span class="st">&quot;...&quot;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>mzidTutorialCompomics <span class="ot">&lt;-</span> <span class="fu">mzID</span>(path2File)</span></code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>Launch the Shiny Gadget and explore the results for the different search engines in your mzID file. Note, do not forget to erase the eval=FALSE to run the code.</li>
+</ol>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evalTargetDecoys</span>(mzidTutorialCompomics)</span></code></pre></div>
+</div>
+<div id="pyrococcus---peptide-shaker---uniprot-search" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> Pyrococcus - Peptide Shaker - Uniprot search</h2>
+<p>Do the analysis for the search MSGF+, X!Tandem, OMSSA and Peptide Shaker scores based on all Pyrococcus proteins in a search against all pyrococcus peptides in Uniprot (data/identification/pyroUniprot.mzid). What do you observe explain. [1.4.b]</p>
+</div>
+<div id="pyrococcuspeptide-shaker---swiss-prot-search" class="section level2" number="3.3">
+<h2><span class="header-section-number">3.3</span> Pyrococcus/Peptide Shaker - Swiss prot search</h2>
+<p>Do the analysis for the search MSGF+, X!Tandem, OMSSA and Peptide Shaker scores for Pyrococcus based on the curated proteins from swissprot only (data/identification/pyroSwissprot.mzid). What do you observe. Try to explain. [1.4.c]</p>
+</div>
+<div id="fdr-elias-and-gygi-2007" class="section level2" number="3.4">
+<h2><span class="header-section-number">3.4</span> FDR Elias and Gygi, 2007</h2>
+<p>Elias and Gygi, 2007, reported the following target decoy FDR estimation:</p>
+<p><span class="math display">\[\widehat{\text{FDR}}(t)=\frac {2 \times (\#decoys &gt;t)}{\#decoys &gt; t + \#targets &gt; t}\]</span></p>
+<p>Do you agree with this expression? Why, why not? [1.4.d]</p>
+</div>
+</div>
+<div id="references" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> References</h1>
+<p>[1] Elias JE, Gygi SP. Target-decoy search strategy for increased confidence in large-scale protein identifications by mass spectrometry. Nat Methods. 2007; 4:207–214.</p>
+<p>[2] Sticker, A., Martens, L. and Clement, L. (2017). Mass spectrometrists should search for all peptides, but assess only the ones they care about. Nature Methods 14, 643–644.</p>
+</div>
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiSW50cm9kdWN0aW9uIHRvIFRhcmdldERlY295IgphdXRob3I6IAogIC0gbmFtZTogTGlldmVuIENsZW1lbnQKICAgIGFmZmlsaWF0aW9uOgogICAgLSBHaGVudCBVbml2ZXJzaXR5Cm91dHB1dDogCiAgICBodG1sX2RvY3VtZW50OgogICAgICBjb2RlX2Rvd25sb2FkOiB0cnVlCiAgICAgIHRoZW1lOiBmbGF0bHkKICAgICAgdG9jOiB0cnVlCiAgICAgIHRvY19mbG9hdDogdHJ1ZQogICAgICBoaWdobGlnaHQ6IHRhbmdvCiAgICAgIG51bWJlcl9zZWN0aW9uczogdHJ1ZQpsaW5rY29sb3I6IGJsdWUKdXJsY29sb3I6IGJsdWUKY2l0ZWNvbG9yOiBibHVlCi0tLQoKYGBge3Igc2V0dXAsIGluY2x1ZGU9RkFMU0UsIGNsYXNzLnNvdXJjZSA9ICdmb2xkLWhpZGUnfQpsaWJyYXJ5KGtuaXRyKQpvcHRzX2NodW5rJHNldCgKICAgIGNvbGxhcHNlID0gVFJVRSwKICAgIGNvbW1lbnQgPSAiIz4iLAogICAgY3JvcCA9IE5VTEwsCiAgICBmaWcud2lkdGggPSA2LAogICAgZHBpID0gNzIKKQpgYGAKCmBgYHtyICJsaWJyYXJpZXMiLCBtZXNzYWdlPUZBTFNFLCB3YXJuaW5nPUZBTFNFLCBjbGFzcy5zb3VyY2UgPSAnZm9sZC1oaWRlJ30KbGlicmFyeShUYXJnZXREZWNveSkKbGlicmFyeShnZ3Bsb3QyKQpsaWJyYXJ5KHRpZHl2ZXJzZSkKZGF0YSgiTW9kU3dpc3NYVCIpCmhscCA8LSBUYXJnZXREZWNveTo6Oi5nZXRERihNb2RTd2lzc1hUKSAKbmFtZXMoaGxwKSA8LSBuYW1lcyhobHApICU+JQogICAgc3RyX3JlcGxhY2UocGF0dGVybj0iOiIscmVwbGFjZW1lbnQ9Il8iKQpobHAgPC0gaGxwICU+JSAKbXV0YXRlKG9tc3NhX2V2YWx1ZT1hcy5kb3VibGUob21zc2FfZXZhbHVlKSkKbmFtZXMoaGxwKSA8LSBuYW1lcyhobHApICU+JSBzdHJfcmVwbGFjZShwYXR0ZXJuPSItIixyZXBsYWNlbWVudCA9ICJfIikKaGxwIDwtIGhscCAlPiUgbXV0YXRlKG1zX2dmX3NwZWNldmFsdWU9YXMuZG91YmxlKG1zX2dmX3NwZWNldmFsdWUpKQpgYGAKCgojIEludHJvCgoKU2hvdGd1biBwcm90ZW9taWNzIHJlbGllcyBvbiB0aGUgYXNzaWdubWVudCBvZiBhIGxhcmdlIG51bWJlciBvZiBzcGVjdHJhIHRvIHRoZW9yZXRpY2FsIHBlcHRpZGVzIGRlcml2ZWQgZnJvbSBhIHNlcXVlbmNlIGRhdGFiYXNlLiBNdWx0aXBsZSBzZWFyY2ggZW5naW5lcyBoYXZlIGJlZW4gZGV2ZWxvcGVkIGZvciB0aGlzIHRhc2ssIGVhY2ggd2l0aCBpdHMgb3duIGFkdmFudGFnZXMgYW5kIGRyYXdiYWNrcy4gTW9zdCBwcm90ZW9taWNzIGRhdGFiYXNlIHNlYXJjaGVzIGFyZSBwZXJmb3JtZWQgYXMgc28tY2FsbGVkIHRhcmdldC9kZWNveSBzZWFyY2hlcy4gQSBjcnVjaWFsIGFzc3VtcHRpb24gb2YgdGhlIHRhcmdldC9kZWNveSBhcHByb2FjaCBpcyB0aGF0IHRoZSBkZWNveSBwZXB0aWRlLXNwZWN0cmFsCm1hdGNoIChQU00pIGhpdHMgaGF2ZSBzaW1pbGFyIHByb3BlcnRpZXMgYXMgYmFkIHRhcmdldCBoaXRzIHNvIHRoYXQgdGhlIGRlY295cyBjYW4gYmUgdXNlZCB0byBjaGFyYWN0ZXJpemUgdGhlIGRpc3RyaWJ1dGlvbiBvZiBiYWQgaGl0cy4gSW4gdGhpcyB0dXRvcmlhbCB3ZSB3aWxsIGludHJvZHVjZSBkaWFnbm9zdGljIHBsb3RzIHRoYXQgY2FuIGJlIHVzZWQgdG8gZXZhbHVhdGUgdGhlc2UgYXNzdW1wdGlvbnMuCgoKIyMgQmFzaWMgU3RhdGlzdGljYWwgQ29uY2VwdHMKCldlIGZpcnN0IGludHJvZHVjZSBzb21lIG5vdGF0aW9uLiBXaXRoIHggd2UgZGVub3RlIHRoZSBQU00gc2NvcmUgYW5kIHdlIGFzc3VtZSB0aGF0IGxhcmdlciBzY29yZSB2YWx1ZXMgaW5kaWNhdGUgYSBiZXR0ZXIgbWF0Y2ggdG8gdGhlIHRoZW9yZXRpY2FsIHNwZWN0cnVtLiBUaGVuIHRoZSBzY29yZXMgd2lsbCBmb2xsb3cgYSBtaXh0dXJlIGRpc3RyaWJ1dGlvbjoKCiQkIGYoeCk9XHBpX2IgZl9iICh4KSsoMS1ccGlfYiApIGZfZyh4KSwgJCQKCndpdGggJGYoeCkkIHRoZSB0YXJnZXQgUFNNIHNjb3JlIGRpc3RyaWJ1dGlvbiwgJGZfYih4KSQgdGhlIG1peHR1cmUgY29tcG9uZW50IGNvcnJlc3BvbmRpbmcgdG8gaW5jb3JyZWN0IFBTTXMsICRmX2coeCkkICB0aGUgbWl4dHVyZSBjb21wb25lbnQgY29ycmVzcG9uZGluZyB0byB0aGUgY29ycmVjdCBQU01zIGFuZCAkXHBpX2IkIHRoZSBmcmFjdGlvbiBvZiBpbmNvcnJlY3QgUFNNcy4KQmFzZWQgb24gdGhlIG1peHR1cmUgZGlzdHJpYnV0aW9uIHdlIGNhbiBjYWxjdWxhdGUgdGhlIHBvc3RlcmlvciBwcm9iYWJpbGl0eSB0aGF0IGEgUFNNIHdpdGggc2NvcmUgeCBpcyBhIGJhZCBtYXRjaDoKCiQkIFBbXHRleHR7QmFkIGhpdH0gXHZlcnQgXHRleHR7c2NvcmUgfXhdPVxmcmFje1xwaV9iIGZfYiAoeCl9e2YoeCl9LCAkJAoKd2hpY2ggaXMgYWxzbyByZWZlcnJlZCB0byBhcyB0aGUgcG9zdGVyaW9yIGVycm9yIHByb2JhYmlsaXR5IChQRVApIGluIG1hc3Mgc3BlY3Ryb21ldHJ5IGJhc2VkIHByb3Rlb21pY3MuCkJhc2VkIG9uIHRoZSBtaXh0dXJlIG1vZGVsLCB3ZSBjYW4gYWxzbyBjYWxjdWxhdGUgdGhlIHBvc3RlcmlvciBwcm9iYWJpbGl0eSB0aGF0IGEgcmFuZG9tIFBTTSBpbiB0aGUgc2V0IG9mIGFsbCBQU01zIHdpdGggc2NvcmVzIGFib3ZlIGEgc2NvcmUgdGhyZXNob2xkIHQgaXMgYSBiYWQgaGl0IChzZWUgZS5nLiBGaWd1cmUgMSk6CgokJCBQW1x0ZXh0e0JhZCBoaXR9IFx2ZXJ0IFx0ZXh0e3Njb3JlIH14PnRdPVxwaV9iIFxmcmFjezEtZl9iICh0KX17MS1GKHQpfSwgJCQKCldpdGggJEYodCkkIGFuZCAkRl9iKHQpJCB0aGUgY3VtdWxhdGl2ZSBkaXN0cmlidXRpb24gZnVuY3Rpb25zIG9mIGFsbCB0YXJnZXQgUFNNcyBhbmQgb2YgdGhlIGJhZCBQU01zLCByZXNwZWN0aXZlbHkuIEhlbmNlLCAkMS1GX2IodCkkIGlzIHRoZSBwcm9iYWJpbGl0eSB0byBvYnNlcnZlIGEgYmFkIFBTTSBoaXQgYWJvdmUgdGhlIHRocmVzaG9sZCBhbmQsICQxLUYodCkkIHRoZSBwcm9iYWJpbGl0eSB0byBvYnNlcnZlIGEgdGFyZ2V0IFBTTSBoaXQgYWJvdmUgdGhlIHRocmVzaG9sZC4gVGhlIHByb2JhYmlsaXR5ICRQW1x0ZXh0e0JhZCBoaXR9IFx2ZXJ0IFx0ZXh0e3Njb3JlIH14PnRdJCBpcyBhbHNvIHJlZmVycmVkIHRvIGFzIHRoZSBmYWxzZSBkaXNjb3ZlcnkgcmF0ZSAoRkRSKSBvZiB0aGUgc2V0IG9mIFBTTXMgd2l0aCBzY29yZXMgYWJvdmUgdGhlIHRocmVzaG9sZCB0LiBIZW5jZSwgdGhlIEZEUiBoYXMgdGhlIGludGVycHJldGF0aW9uIG9mIHRoZSBwcm9iYWJpbGl0eSBvbiBhIGJhZCBoaXQgaW4gdGhlIHNldCBvZiBhbGwgdGFyZ2V0IGhpdHMgdGhhdCBhcmUgcmV0dXJuZWQgaW4gdGhlIGZpbmFsIFBTTSBsaXN0LgoKCmBgYHtyIGNsYXNzLnNvdXJjZSA9ICdmb2xkLWhpZGUnfQpsaWJyYXJ5KG1nY3YpCmRlYyA8LSAtbG9nMTAoaGxwJG1zX2dmX3NwZWNldmFsdWVbaGxwJGlzZGVjb3ldKSAlPiUgbmEuZXhjbHVkZSgpCnRhciA8LSAtbG9nMTAoaGxwJG1zX2dmX3NwZWNldmFsdWVbIWhscCRpc2RlY295XSkgJT4lIG5hLmV4Y2x1ZGUoKQoKYnJlYWtzIDwtIHNlcSgwLDMwLC41KQojYmluV2lkdGggPC0yCiNicmVha3MgPC0gc2VxKGZsb29yKG1pbihjKGRlYyx0YXIpKS9iaW5XaWR0aCkqYmluV2lkdGgsY2VpbGluZyhtYXgoYyhkZWMsdGFyKSkvYmluV2lkdGgpKmJpbldpZHRoLGJpbldpZHRoKQojY29kZSBpZiB3ZSByZWdpc3RlciB0aGUgbW9kZXMgYnkgc3Vic3RyYWN0aW5nIHRoZSBtb2RlIGZyb20gdGhlIHRhcmdldCBzY29yZXMgYW5kICB0aGUgZGVjb3kgc2NvcmVzLgojYnJlYWtzPXNlcSgtKGNlaWxpbmcoYWJzKG1pbihjKGRlYyx0YXIpKS9iaW5XaWR0aCkpKy41KSpiaW5XaWR0aCwoY2VpbGluZyhtYXgoYyhkZWMsdGFyKSkvYmluV2lkdGgpKy41KSpiaW5XaWR0aCxiaW5XaWR0aCkKaGlzdERlYyA8LSBoaXN0KGRlYyxicmVha3M9YnJlYWtzLHBsb3QgPSBGQUxTRSkKaGlzdFRhciA8LSBoaXN0KHRhcixicmVha3M9YnJlYWtzLHBsb3Q9RkFMU0UpCmhpc3RTYW0gPC0gaGlzdChjKGRlYyx0YXIpLGJyZWFrcz1icmVha3MsIHBsb3QgPSBGQUxTRSkKCmdyaWQ8LXNlcSgwLDMwLC4xKQpjb3VudHNUYXJHPC1kYXRhLmZyYW1lKHk9aGlzdFRhciRjb3VudHMtaGlzdERlYyRjb3VudHMseD1oaXN0VGFyJG1pZHMpCmNvdW50c1RhckckeVtjb3VudHNUYXJHJHk8MF08LTAKZml0VGFyRzwtZ2FtKHl+cyh4KSxkYXRhPWNvdW50c1RhckcsZmFtaWx5PXBvaXNzb24pCmZpdFRhckdyaWQ8LWV4cChwcmVkaWN0KGZpdFRhckcsbmV3ZGF0YT1kYXRhLmZyYW1lKHg9Z3JpZCkpKQoKY291bnRzRGVjPC1kYXRhLmZyYW1lKHk9aGlzdERlYyRjb3VudHMseD1oaXN0RGVjJG1pZHMpCmZpdERlYzwtZ2FtKHl+cyh4KSxkYXRhPWNvdW50c0RlYyxmYW1pbHk9cG9pc3NvbikKZml0QmFkPC1leHAocHJlZGljdChmaXREZWMsbmV3ZGF0YT1kYXRhLmZyYW1lKHg9Z3JpZCkpKQoKcGxvdChoaXN0VGFyLHhsYWI9Ik1TLUdGKyBTY29yZSIseWxhYj0iIyBQU01zIixtYWluPSJQeXJvY29jY3VzIFNlYXJjaCIsYm9yZGVyPSJ3aGl0ZSIsY29sPSJncmV5IixjZXguYXhpcz0xLjUsY2V4Lm1haW49MS41LGNleC5sYWI9MS41LHlsaW09YygwLDE1MDApLCBheGVzID1GQUxTRSkKYXhpcyhzaWRlPTIsYXQ9YygwLDc1MCwxNTAwKSkKYXhpcyhzaWRlPTEsYXQ9YygwLDEwLDIwLDMwKSkKbGluZXMoZ3JpZCxmaXRCYWQrZml0VGFyR3JpZCxjb2w9ImJsYWNrIixsd2Q9MikKbGluZXMoZ3JpZCxmaXRCYWQsY29sPSJyZWQiLGx3ZD0yKQpsaW5lcyhncmlkLGZpdFRhckdyaWQsY29sPSJibHVlIixsd2Q9MikKbGluZXMoaGlzdERlYyRtaWRzLGhpc3REZWMkY291bnRzLGNvbD0icmVkIix0eXBlPSJoIikKbGVnZW5kKCJ0b3ByaWdodCIsbGVnZW5kPWMoInRhcmdldHMiLCJkZWNveXMiKSxjb2w9YygiZ3JleSIsInJlZCIpLCBsdHkgPXJlcCgxLDIpKQpgYGAKCiBXZSB3b3VsZCBsaWtlIHRvIGNhbGN1bGF0ZSB0aGUgRkRSIGNvcnJlc3BvbmRpbmcgdG8gdGhlIHNldCBvcCBQU01zIHdpdGggYSB0YXJnZXQgc2NvcmUgYWJvdmUgdGhlIHRocmVzaG9sZCB0LgpJbiBvcmRlciB0byBjYWxjdWxhdGUgdGhlIEZEUiwgd2UgdGh1cyBoYXZlIHRvIGNoYXJhY3Rlcml6ZSB0aGUgZGlzdHJpYnV0aW9uIG9mIHRoZSBiYWQgaGl0cyBhbmQgb2YgYWxsIFBTTXMuCkluIHByb3Rlb21pY3MgdGhpcyBpcyBkb25lIGJ5IHRoZSB1c2Ugb2YgdGhlIHRhcmdldC9kZWNveSBhcHByb2FjaC4KCiMjIFRhcmdldCBEZWNveSBBcHByb2FjaAoKCldoZW4gdXNpbmcgYSBjb21wZXRpdGl2ZSB0YXJnZXQgZGVjb3kgc2VhcmNoLCB0aGUgRkRSIG9mIHRoZSBzZXQgb2YgcmV0dXJuZWQgUFNNcyBpcyBlc3RpbWF0ZWQgYnkgZGl2aWRpbmcgdGhlIG51bWJlciBvZiBhY2NlcHRlZCBkZWNveXMgUFNNcyBieSB0aGUgbnVtYmVyIG9mIGFjY2VwdGVkIHRhcmdldCBQU01zIGFib3ZlIGEgY2VydGFpbiBzY29yZSBjdXRvZmYgWzFdLgoKJCQgXHdpZGVoYXR7XHRleHR7RkRSfX0odCk9XGZyYWN7XCMgZGVjb3lzIHwgeD50fXtcI3RhcmdldHMgfHg+dH0gJCQKClRoaXMgY2FuIGJlIHJld3JpdHRlbiBhczoKCiQkIFx3aWRlaGF0e1x0ZXh0e0ZEUn19KHQpPVxmcmFje1wjZGVjb3lzfXtcI3RhcmdldHN9XGZyYWN7XGZyYWN7XCMgZGVjb3lzIHwgeD50fXtcI2RlY295c319e1xmcmFje1wjdGFyZ2V0cyB8eD50fXtcI3RhcmdldHN9fSAkJAoKJCQgXHdpZGVoYXR7XHRleHR7RkRSfX0odCk9XGhhdFxwaV9iXGZyYWN7MS1cYmFye0Z9XzAodCl9ezEtXGJhcntGfSh0KX0gJCQKCkhlbmNlLCB0aGUgcHJvcG9ydGlvbiBvZiBiYWQgaGl0cyBcXCggXHBpX2IgXFwpIGlzIGVzdGltYXRlZCBhcyB0aGUgbnVtYmVyIG9mIGRlY295cyBkaXZpZGVkIGJ5IHRoZSBudW1iZXIgb2YgdGFyZ2V0cywgYW5kIHRoZSBjb21wZXRpdGl2ZSBUREEgYXNzdW1lcyB0aGF0IGl0IGlzIGVxdWFsbHkgbGlrZWx5IHRoYXQgYSBiYWQgaGl0IG1hdGNoZXMgdG8gYSBiYWQgdGFyZ2V0IG9yIHRvIGEgZGVjb3k7IHRoZSBwcm9iYWJpbGl0eSBvZiAgYSAoYmFkKSB0YXJnZXQgUFNNIGhpdCBhYm92ZSB0aGUgdGhyZXNob2xkIGlzIGVzdGltYXRlZCBiYXNlZCBvbiB0aGUgZW1waXJpY2FsIGN1bXVsYXRpdmUgZGlzdHJpYnV0aW9uIGluIHRoZSBzYW1wbGUsIGkuZS4gYXMgdGhlIGZyYWN0aW9uIG9mIHRhcmdldHMgKGRlY295cykgdGhhdCBhcmUgYWJvdmUgdGhlIHRocmVzaG9sZC4gSGVuY2UsIGEgc2Vjb25kIGFzc3VtcHRpb24gaXMgdGhhdCB0aGUgZGVjb3kgbWF0Y2hlcyBwcm92aWRlIGEgZ29vZCBzaW11bGF0aW9uIG9mIHRoZSB0YXJnZXQgbWF0Y2hlcy4gU2VlIGUuZy4gWzJdLiBUaGVzZSBhc3N1bXB0aW9ucyBjYW4gYmUgZXZhbHVhdGVkIHdpdGggb3VyIFRhcmdldERlY295IFIvQmlvY29uZHVjdG9yIHBhY2thZ2UuCgojIEV4YW1wbGU6IE1TR0YrIHNlYXJjaCBvbiBTd2lzcyBQcm90IAoKVGhlIFB5cm9jb2NjdXMgZnVyaW9zdXMgKHN0cmFpbiBBVENDIDQzNTg3IC8gRFNNIDM2MzggLyBKQ00gODQyMiAvIFZjMSkgcmVmZXJlbmNlIHByb3Rlb21lLiBUaGUgcmVzdWx0aW5nIGRhdGFiYXNlIGhhcyAyLDA1MSBwcm90ZWlucyBpbiB0b3RhbCAoW2h0dHBzOi8vd3d3LnVuaXByb3Qub3JnL3VuaXByb3QvP3F1ZXJ5PXRheG9ub215OjE4NjQ5N10oaHR0cHM6Ly93d3cudW5pcHJvdC5vcmcvdW5pcHJvdC8/cXVlcnk9dGF4b25vbXk6MTg2NDk3KSwgdGF4b25vbXk6IlB5cm9jb2NjdXMgZnVyaW9zdXMgKHN0cmFpbiBBVENDIDQzNTg3IC8gRFNNIDM2MzggLyBKQ00gODQyMiAvIFZjMSkgWzE4NjQ5N10iKS4KClRoZSBkYXRhIGNhbiBiZSBmb3VuZCBvbiBbaHR0cHM6Ly9naXRodWIuY29tL0dUUEIvUERBMjIvdHJlZS9kYXRhXShodHRwczovL2dpdGh1Yi5jb20vR1RQQi9QREEyMi90cmVlL2RhdGEpLgoKV2Ugd2lsbCB1c2UgdGhlIG16aWQgZmlsZSBmb3IgdGhlIHB5cm9jb2NjdXMgZXhhbXBsZSwgd2hpY2ggY2FuIGJlIGZvdW5kIGF0IGRhdGEvaWRlbnRpZmljYXRpb24vcHlyb2NvY2N1c01TR0YrLm16aWQuCgoxLiBEb3dubG9hZCB0aGUgY29kZSBvZiB0aGlzIHZpZ25ldHRlIGJ5IGNsaWNraW5nIHRoZSBjb2RlIGJ1dHRvbiBpbiB0aGUgdG9wIG9mIHRoaXMgcGFnZSBhbmQgZG93bmxvYWRpbmcuIAoKMi4gT3BlbiB0aGUgZG93bmxvYWRlZCBmaWxlIGluIFJzdHVkaW8gCgozLiBMb2FkIGxpYnJhcmllcwoKYGBge3J9CmxpYnJhcnkoVGFyZ2V0RGVjb3kpCmxpYnJhcnkoUkN1cmwpCmxpYnJhcnkobXpJRCkKYGBgCgoKNC4gRG93bmxvYWQgZGF0YSBpbiB5b3VyIHdvcmtpbmcgZGlyZWN0b3J5LiAgWW91IGNhbiBza2lwIHRoaXMgc3RlcCBpZiB5b3UgZG93bmxvYWRlZCBhbGwgZGF0YSBvbiB5b3VyIGNvbXB1dGVyLiAgCgpgYGB7cn0KZG93bmxvYWQuZmlsZSgiaHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL0dUUEIvUERBMTkvZGF0YS9pZGVudGlmaWNhdGlvbi9weXJvY29jY3VzTVNHRiUyQi5temlkIiwicHlyb2NvY2N1c01TR0YrLm16aWQiKQpgYGAKCjUuIFNldCBhIHBhdGggdG8geW91ciB3b3JraW5nIGRpcmVjdG9yeSBhbmQgaW1wb3J0IHRoZSBteklEIGZpbGUgaW4gUi4KCmBgYHtyfQpwYXRoMkZpbGUgPC0gInB5cm9jb2NjdXNNU0dGKy5temlkIgptc2dmIDwtIG16SUQocGF0aDJGaWxlKQpgYGAKCjYuIExhdW5jaCB0aGUgZXZhbFRhcmdldERlY295cyBTaGlueSBHYWRnZXQuIE5vdGUsIHRoYXQgeW91IGhhdmUgdG8gZXJhc2UgdGhlIGV2YWw9RkFMU0Ugb3B0aW9uIGluIG9yZGVyIHRvIHJ1biB0aGUgY29kZS4gCgpgYGB7ciBldmFsPUZBTFNFfQpldmFsVGFyZ2V0RGVjb3lzKG1zZ2YpCmBgYAo3LiBZb3UgY2FuIGltbWVkaWF0ZWx5IG1ha2UgdGhlIHBsb3RzIGluIHRoZSBzY3JpcHQgdXNpbmcgdGhlIGNvZGUgYmVsb3cKCmBgYHtyfQpldmFsVGFyZ2V0RGVjb3lzKG1zZ2YsImlzZGVjb3kiLCJtcy1nZjpldmFsdWUiKQpgYGAKClR3byBkaWFnbm9zdGljIHBsb3RzIGFyZSBnZW5lcmF0ZWQuIEEgaGlzdG9ncmFtIG9mIHRhcmdldCBhbmQgZGVjb3kgc2NvcmVzICh0b3AgcGFuZWxzKSBhbmQgUHJvYmFiaWxpdHktUHJvYmFiaWxpdHkgcGxvdHMgKFBQLXBsb3RzKS4gSW4gdGhlIGhpc3RvZ3JhbSB0aGUgc2hhcGUgb2YgdGhlIGRlY295cyAocmVkKSBzaG91bGQgYmUgZXF1YWwgdG8gdGhhdCBvZiBiYWQgdGFyZ2V0IGhpdHMgKGZpcnN0IG1vZGUgaW4gdGhlIHRhcmdldCBkaXN0cmlidXRpb24gaW5kaWNhdGVkIGluIGdyZWVuKS4gVGhlIGhlaWdodCBvZiB0aGUgZGVjb3lzIGNhbiBiZSBzbGlnaHRseSBsb3dlciB0aGFuIHRoZSBmaXJzdCBtb2RlIGluIHRoZSB0YXJnZXQgZGlzdHJpYnV0aW9uIGJlY2F1c2Ugc29tZSBnb29kIHRhcmdldCBoaXRzIGFsc28gaGF2ZSBhIGxvdyBzY29yZS4gSGVyZSwgdGhlIGhpc3RvZ3JhbSBkb2VzIG5vdCBpbmRpY2F0ZSBwcm9ibGVtcyB3aXRoIHRoZSBUREEuIAoKRGV2aWF0aW9ucyBmcm9tIHRoZSBhc3N1bXB0aW9ucyBvZiBUREEgY2FuIGJlIGJldHRlciBldmFsdWF0ZWQgaW4gdGhlIFBQLXBsb3QgKGxvd2VyIHBhbmVsKS4gVGhlIFBQLXBsb3QgZGlzcGxheXMgdGhlIGVtcGlyaWNhbCBjdW11bGF0aXZlIGRpc3RyaWJ1dGlvbiAoRUNERikgZnJvbSB0aGUgdGFyZ2V0IGRpc3RyaWJ1dGlvbiBpbiBmdW5jdGlvbiB0aGF0IG9mIHRoZSBkZWNveSBkaXN0cmlidXRpb24uIFBQLXBsb3RzIGhhdmUgdGhlIHByb3BlcnR5IHRoYXQgdGhleSBzaG93IGEgc3RyYWlnaHQgNDUgZGVncmVlIGxpbmUgdGhyb3VnaCB0aGUgb3JpZ2luIGlmIGFuZCBvbmx5IGlmIGJvdGggZGlzdHJpYnV0aW9ucyBhcmUgZXF1aXZhbGVudC4gQW55IGRldmlhdGlvbiBmcm9tIHRoaXMgc3RyYWlnaHQgbGluZSBpbmRpY2F0ZXMgdGhhdCB0aGUgZGlzdHJpYnV0aW9ucyBkaWZmZXIuIEZvciB0YXJnZXRzIGFuZCBkZWNveXMgdGhpcyBpcyBvYnZpb3VzbHkgdGhlIGNhc2UuIFRoZSB0YXJnZXQgZGlzdHJpYnV0aW9uIGlzIHN0b2NoYXN0aWNhbGx5IGxhcmdlciB0aGFuIHRoZSBkZWNveSBkaXN0cmlidXRpb24gYXMgbGFyZ2VyIHNjb3JlcyBpbmRpY2F0ZSBtb3JlIHJlbGlhYmxlIGhpdHMgYW5kIGFzIGRlY295cyBhcmUgYmVsaWV2ZWQgdG8gYmVoYXZlIHNpbWlsYXJseSB0byBiYWQgdGFyZ2V0IGhpdHMuIEhlbmNlLCB0aGUgUFAtcGxvdCBmb3IgdGFyZ2V0cyB2cyBkZWNveXMgd2lsbCBhbHdheXMgbGF5IGJlbG93IHRoZSA0NSBkZWdyZWUgbGluZS4gV2hlbiB0aGUgZGVjb3lzIGFyZSBhIGdvb2Qgc2ltdWxhdGlvbiBmb3IgdGhlIGJhZCB0YXJnZXQgaGl0cywgaG93ZXZlciwgdGhlIGxvd2VyIHZhbHVlcyBpbiB0aGUgUFAtcGxvdCBzaG91bGQgbGF5IG9uIGEgc3RyYWlnaHQgbGluZSB0aGF0IGlzIGxvY2F0ZWQgYXJvdW5kICRcaGF0e1xwaX1fYiQuIEluZGVlZCwgYXQgc21hbGwgdGFyZ2V0IFBTTSBzY29yZXMgYXJlIG1vc3QgbGlrZWx5IGJhZCBoaXRzLiAgVGhlIHNsb3BlIG9mIHRoZSBibGFjayBsaW5lIGluIHRoZSBwLXBsb3QgaXMgYmFzZWQgb24gdGhlIGVzdGltYXRlIG9mICRcaGF0e1xwaX1fYiQuIFRoZSBmaXJzdCBwYXJ0IG9mIHRoZSBQUC1wbG90IGZvciB0aGUgcHlyb2NvY2N1cyBleGFtcGxlIGlzIGxpbmVhciB3aXRoIGEgc2xvcGUgdGhhdCBlcXVhbHMgJFxoYXR7XHBpfV8wJC4gVGhpcyBpbmRpY2F0ZXMgdGhhdCB0aGUgZGVjb3kgZGlzdHJpYnV0aW9uIGFuZCB0aGUgbWl4dHVyZSBjb21wb25lbnQgZm9yIGluY29ycmVjdCBQU01zIG9mIHRoZSB0YXJnZXQgbWl4dHVyZSBkaXN0cmlidXRpb24gY29pbmNpZGUuIFRoZSBzZWNvbmQgcGFydCBvZiB0aGUgcGxvdCBkZXZpYXRlcyBmcm9tIHRoZSBsaW5lIHRvd2FyZHMgaGlnaGVyIHBlcmNlbnRpbGVzIGJlY2F1c2UgdGhlIHVwcGVyIHRhaWwgb2YgdGhlIG1peHR1cmUgY29tcG9uZW50IGZvciBpbmNvcnJlY3Qgc3Vic2V0IFBTTXMgYW5kIHRoZSBsb3dlciB0YWlsIG9mIHRoZSBtaXh0dXJlIGNvbXBvbmVudCBmb3IgY29ycmVjdCBzdWJzZXQgUFNNcyBvdmVybGFwIGFuZCB0aGVyZWZvcmUgdGFyZ2V0IFBTTXMgb2NjdXIgYXQgYSBoaWdoZXIgcHJvYmFiaWxpdHkgYXQgaW50ZXJtZWRpYXRlIHNjb3JlcyB0aGFuIGluIHRoZSBkZWNveSBkaXN0cmlidXRpb24uIEZpbmFsbHksIHRoZSBQUC1wbG90IGJlY29tZXMgdmVydGljYWwsIGJlY2F1c2UgYWxsIHRoZSBkZWNveXMgaGF2ZSBiZWVuIG9ic2VydmVkIChkZWNveSBwZXJjZW50aWxlPTEpIGJlZm9yZSBhbGwgdGhlIHNjb3JlcyBvZiB0aGUgdGFyZ2V0IFBTTXMgYXJlIG9ic2VydmVkLiBJZiB3ZSBzZWUgdGhpcyBwcm9maWxlIGluIHRoZSBQUC1wbG90LCB3ZSBoYXZlIGEgZ29vZCBpbmRpY2F0aW9uIHRoYXQgdGhlIHNldCBvZiBkZWNveXMgZnJvbSB0aGUgY29tcGxldGUgc2VhcmNoIGlzIHJlcHJlc2VudGF0aXZlIGZvciB0aGUgbWl4dHVyZSBjb21wb25lbnQgZm9yIGluY29ycmVjdCBQU01zIG9mIHRoZSB0YXJnZXQgbWl4dHVyZSBkaXN0cmlidXRpb24uIEhlbmNlLCB0aGUgYXNzdW1wdGlvbnMgb2YgdGhlIGNvbmNhdGVuYXRlZCBUREEgYXBwcm9hY2ggYXJlIG5vdCB2aW9sYXRlZCBmb3IgdGhlIFB5cm9jb2NjdXMgZXhhbXBsZS4KCldoZW4gdGhlIGFzc3VtcHRpb25zIG9mIHRoZSBjb25jYXRlbmF0ZWQgVERBIGFwcHJvYWNoIGFyZSB2aW9sYXRlZCwgdGhlIGRvdHMgaW4gdGhlIFBQLXBsb3QgYXQgbG93ZXIgcGVyY2VudGlsZXMgd2lsbCBkZXZpYXRlIGZyb20gdGhlICQgXGhhdHtccGl9X2IkIGxpbmUuIEluIGNhc2UgdGhlIFBQLXBsb3QgaXMgc3RpbGwgYSBzdHJhaWdodCBsaW5lIGF0IGxvd2VyIHBlcmNlbnRpbGVzLCB0aGVuIHRoZSBzaGFwZSBvZiB0aGUgZGVjb3kgZGlzdHJpYnV0aW9uIGlzIGNvcnJlY3QsIGJ1dCB0aGVyZSBhcmUgbGVzcyAob3IgbW9yZSkgZGVjb3lzIHRoYW4gZXhwZWN0ZWQgdW5kZXIgdGhlIGNvbmNhdGVuYXRlZCBUREEgYXNzdW1wdGlvbiwgd2hpY2ggY291bGQgb2NjdXIgaWYgdGhlIGRlY295IGRhdGFiYXNlIGlzIGRpZmZlcmVudCBpbiBzaXplIHRoYW4gdGhlIHRhcmdldCBkYXRhYmFzZSBvciB3aGVuIGEgYmFkIGhpdCBpcyBsZXNzIGxpa2VseSB0byBtYXRjaCB0byBhIGRlY295IHRoYW4gdG8gYSB0YXJnZXQuIFRoaXMgd291bGQgYWxzbyBiZSB2aXNpYmxlIGluIHRoZSBoaXN0b2dyYW1zOiB0aGUgZGVjb3kgaGlzdG9ncmFtIHdvdWxkIGJlIGNvbnNpZGVyYWJseSBsb3dlciAoaGlnaGVyKSB0aGFuIHRoZSBmaXJzdCBtb2RlIG9mIHRoZSB0YXJnZXQgZGlzdHJpYnV0aW9uLgpXaGVuIHRoZSBQUC1wbG90IGF0IGxvd2VyIHBlcmNlbnRpbGVzIGRldmlhdGVzIGZyb20gYSBzdHJhaWdodCBsaW5lLCB0aGUgZGlzdHJpYnV0aW9uIG9mIGRlY295cyBhbmQgdGhlIGJhZCB0YXJnZXQgUFNNcyBpcyBub3QgZXF1aXZhbGVudCwgaW5kaWNhdGluZyB0aGF0IHRoZSBkZWNveXMgYXJlIG5vdCBhIGdvb2Qgc2ltdWxhdGlvbiBvZiBiYWQgdGFyZ2V0IGhpdHMuCkJvdGggdHlwZSBvZiBkZXZpYXRpb25zIHNob3VsZCBiZSBvZiBjb25jZXJuIGFzIHRoZXkgaW5kaWNhdGUgdGhhdCB0aGUgRkRSIHJldHVybmVkIGJ5IHRoZSBjb252ZW50aW9uYWwgY29uY2F0ZW5hdGVkIFREQSBpcyBpbmNvcnJlY3QuCgojIEV4ZXJjaXNlcwoKMS4gRG93bmxvYWQgYWxsIHRoZSBkYXRhIGZyb20gW0Rvd25sb2FkIGRhdGFdKGh0dHBzOi8vZ2l0aHViLmNvbS9zdGF0T21pY3MvUERBL2FyY2hpdmUvcmVmcy9oZWFkcy9kYXRhLnppcCkuCgoyLiBVbnppcCB0aGUgZGF0YSAKCiMjIEFzc2VzcyB0aGUgc2VhcmNoIHlvdSBwZXJmb3JtZWQgaW4gIlR1dG9yaWFsIDEuIFBlcHRpZGUgYW5kIFByb3RlaW4gSWRlbnRpZmljYXRpb24iIGF0IFtodHRwczovL2NvbXBvbWljcy5jb20vYmlvaW5mb3JtYXRpY3MtZm9yLXByb3Rlb21pY3MvaWRlbnRpZmljYXRpb24vXShodHRwczovL2NvbXBvbWljcy5jb20vYmlvaW5mb3JtYXRpY3MtZm9yLXByb3Rlb21pY3MvaWRlbnRpZmljYXRpb24vKQpPcGVuIHRoZSBzZWFyY2ggZnJvbSB0dXRvcmlhbCAxLjMuIGluIFBlcHRpZGUgU2hha2VyIGFuZCBleHBvcnQgdGhlIHNlYXJjaCB0byBhbiBtemlkIGZpbGUgYnkgY2xpY2tpbmcgZXhwb3J0ID4gUGVwdGlkZSBTaGFrZXIgUHJvamVjdCBBcyA+IG16SWRlbnRNTC4gRXZhbHVhdGUgdGhlIFREQSBmb3IgdGhlIG9tbXNhLCBYIVRhbmRlbSBhbmQgdGhlIFBlcHRpZGUgU2hha2VyIHNjb3JlLgoKRXZhbHVhdGUgdGhlIFREQSBmb3IgdGhlICBYIVRhbmRlbSwgT01TU0EgYW5kIFBlcHRpZGUgU2hha2VyIHNjb3Jlcy4gV2hhdCBkbyB5b3Ugb2JzZXJ2ZSBhbmQgdHJ5IHRvIGV4cGxhaW4uIFsxLjQuYV0KCjEuIENvbXBsZXRlIHRoZSBjb2RlIGJlbG93IGJ5IGZpbGxpbmcgb3V0IHRoZSBwYXRoIHRvIHlvdXIgZmlsZS4gIApOb3RlLCB0aGF0IHlvdSBoYXZlIHRvIGVyYXNlIHRoZSBldmFsPUZBTFNFIG9wdGlvbiBpbiBvcmRlciB0byBydW4gdGhlIGNvZGUuIAoKYGBge3IgZXZhbD1GQUxTRX0KcGF0aDJGaWxlIDwtICIuLi4iCm16aWRUdXRvcmlhbENvbXBvbWljcyA8LSBteklEKHBhdGgyRmlsZSkKYGBgCgoyLiBMYXVuY2ggdGhlIFNoaW55IEdhZGdldCBhbmQgZXhwbG9yZSB0aGUgcmVzdWx0cyBmb3IgdGhlIGRpZmZlcmVudCBzZWFyY2ggZW5naW5lcyBpbiB5b3VyIG16SUQgZmlsZS4gTm90ZSwgZG8gbm90IGZvcmdldCB0byBlcmFzZSB0aGUgZXZhbD1GQUxTRSB0byBydW4gdGhlIGNvZGUuIAoKYGBge3IgZXZhbD1GQUxTRX0KZXZhbFRhcmdldERlY295cyhtemlkVHV0b3JpYWxDb21wb21pY3MpCmBgYAoKIyMgUHlyb2NvY2N1cyAtIFBlcHRpZGUgU2hha2VyIC0gVW5pcHJvdCBzZWFyY2gKRG8gdGhlIGFuYWx5c2lzIGZvciB0aGUgc2VhcmNoIE1TR0YrLCBYIVRhbmRlbSwgT01TU0EgYW5kIFBlcHRpZGUgU2hha2VyIHNjb3JlcyBiYXNlZCBvbiBhbGwgUHlyb2NvY2N1cyBwcm90ZWlucyBpbiBhIHNlYXJjaCBhZ2FpbnN0IGFsbCBweXJvY29jY3VzIHBlcHRpZGVzIGluIFVuaXByb3QgKGRhdGEvaWRlbnRpZmljYXRpb24vcHlyb1VuaXByb3QubXppZCkuIFdoYXQgZG8geW91IG9ic2VydmUgZXhwbGFpbi4gWzEuNC5iXQoKIyMgUHlyb2NvY2N1cy9QZXB0aWRlIFNoYWtlciAtIFN3aXNzIHByb3Qgc2VhcmNoCkRvIHRoZSBhbmFseXNpcyBmb3IgdGhlIHNlYXJjaCBNU0dGKywgWCFUYW5kZW0sIE9NU1NBIGFuZCBQZXB0aWRlIFNoYWtlciBzY29yZXMgZm9yIFB5cm9jb2NjdXMgYmFzZWQgb24gdGhlIGN1cmF0ZWQgcHJvdGVpbnMgZnJvbSBzd2lzc3Byb3Qgb25seSAoZGF0YS9pZGVudGlmaWNhdGlvbi9weXJvU3dpc3Nwcm90Lm16aWQpLiBXaGF0IGRvIHlvdSBvYnNlcnZlLiBUcnkgdG8gZXhwbGFpbi4gWzEuNC5jXQoKIyMgRkRSIEVsaWFzIGFuZCBHeWdpLCAyMDA3CkVsaWFzIGFuZCBHeWdpLCAyMDA3LCByZXBvcnRlZCB0aGUgZm9sbG93aW5nIHRhcmdldCBkZWNveSBGRFIgZXN0aW1hdGlvbjoKCiQkXHdpZGVoYXR7XHRleHR7RkRSfX0odCk9XGZyYWMgezIgXHRpbWVzIChcI2RlY295cyA+dCl9e1wjZGVjb3lzID4gdCArIFwjdGFyZ2V0cyA+IHR9JCQKCkRvIHlvdSBhZ3JlZSB3aXRoIHRoaXMgZXhwcmVzc2lvbj8gV2h5LCB3aHkgbm90PyBbMS40LmRdCgoKIyBSZWZlcmVuY2VzCgpbMV0gRWxpYXMgSkUsIEd5Z2kgU1AuIFRhcmdldC1kZWNveSBzZWFyY2ggc3RyYXRlZ3kgZm9yIGluY3JlYXNlZCBjb25maWRlbmNlIGluIGxhcmdlLXNjYWxlIHByb3RlaW4gaWRlbnRpZmljYXRpb25zIGJ5IG1hc3Mgc3BlY3Ryb21ldHJ5LiBOYXQgTWV0aG9kcy4gMjAwNzsgNDoyMDctLTIxNC4KClsyXSBTdGlja2VyLCBBLiwgTWFydGVucywgTC4gYW5kIENsZW1lbnQsIEwuICgyMDE3KS4gTWFzcyBzcGVjdHJvbWV0cmlzdHMgc2hvdWxkIHNlYXJjaCBmb3IgYWxsIHBlcHRpZGVzLCBidXQgYXNzZXNzIG9ubHkgdGhlIG9uZXMgdGhleSBjYXJlIGFib3V0LiBOYXR1cmUgTWV0aG9kcyAxNCwgNjQzLS02NDQuCg==</div>
+<div class="footer">
+    <hr>
+    This work is licensed under the <a href= "https://creativecommons.org/licenses/by-nc-sa/4.0">
+    CC BY-NC-SA 4.0</a> licence.
+</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("TargetDecoyTutorial.Rmd");
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
