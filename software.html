@@ -307,7 +307,7 @@ $(document).ready(function () {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/statOmics/PDA">
+  <a href="https://github.com/statOmics/PDA22GTPB">
     <span class="fab fa-github"></span>
      
   </a>
@@ -340,9 +340,16 @@ $(document).ready(function () {
 
 
 <p><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a></p>
+<div id="install-r-and-rstudio" class="section level1">
+<h1>Install R and Rstudio</h1>
 <ul>
 <li>Install [R version 4.1 or higher] (<a href="https://cran.r-project.org/" class="uri">https://cran.r-project.org/</a>)</li>
 <li>Install <a href="https://www.rstudio.com/products/rstudio/download/">Rstudio</a></li>
+</ul>
+</div>
+<div id="install-msqrob2" class="section level1">
+<h1>Install <em>msqrob2</em></h1>
+<ul>
 <li>Install <em>msqrob2</em>, start R and run the following command.</li>
 </ul>
 <pre><code>if(!requireNamespace(&quot;BiocManager&quot;, quietly = TRUE)) {
@@ -367,6 +374,26 @@ data(pe)
 pe &lt;- aggregateFeatures(pe,i=&quot;peptide&quot;,fcol=&quot;Proteins&quot;,name=&quot;protein&quot;)
 pe &lt;- msqrob(pe,i=&quot;protein&quot;,formula=~condition,modelColumnName=&quot;rlm&quot;)
 getCoef(rowData(pe[[&quot;protein&quot;]])$rlm[[1]])</code></pre>
+</div>
+<div id="install-targetdecoy-for-qc-of-decoys" class="section level1">
+<h1>Install <em>TargetDecoy</em> for QC of decoys</h1>
+<ul>
+<li>Install <em>TargetDecoy</em>, start R and run the following command.</li>
+</ul>
+<pre><code>if(!requireNamespace(&quot;BiocManager&quot;, quietly = TRUE)) {
+ install.packages(&quot;BiocManager&quot;)
+}
+if(!requireNamespace(&quot;remotes&quot;, quietly = TRUE)) {
+ BiocManager::install(&quot;remotes&quot;)
+}
+BiocManager::install(&quot;statomics/TargetDecoy&quot;)</code></pre>
+<ul>
+<li>Check if your installation is working with the following example</li>
+</ul>
+<pre><code>library(TargetDecoy)
+data(&quot;ModSwiss&quot;)
+evalTargetDecoys(ModSwiss,&quot;isdecoy&quot;,&quot;ms-gf:evalue&quot;)</code></pre>
+</div>
 
 <div class="footer">
     <hr>
