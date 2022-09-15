@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Tutorial: Evaluate pyrococcus searches using uniprot and peptide shaker</title>
+
+<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+.sourceCode .row {
+  width: 100%;
+}
+.sourceCode {
+  overflow-x: auto;
+}
+.code-folding-btn {
+  margin-right: -30px;
+}
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">PDA</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-chalkboard-teacher"></span>
+     
+    Topics
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="assets/martens_protein_identification.pdf">1.1. Protein Identification</a>
+    </li>
+    <li>
+      <a href="assets/martens_data_sharing.pdf">1.2. Data Sharing</a>
+    </li>
+    <li>
+      <a href="assets/martens_proteomics_quantification.pdf">1.3. Quantification</a>
+    </li>
+    <li>
+      <a href="TargetDecoy.html">2.1. Identification - FDR - QC</a>
+    </li>
+    <li>
+      <a href="pda_quantification_preprocessing.html">2.2.1. Quantification - Preprocessing</a>
+    </li>
+    <li>
+      <a href="pda_robustSummarisation_peptideModels.html">2.2.2. Wrap-up Preprocessing - Peptide-Level-Models</a>
+    </li>
+    <li>
+      <a href="pda_quantification_inference.html">2.3.1. Quantification - Differential Abundance Analysis</a>
+    </li>
+    <li>
+      <a href="pda_blocking_wrapup.html">2.3.2. Wrap-up DA - Blocking</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-laptop"></span>
+     
+    Exercises
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="https://www.compomics.com/bioinformatics-for-proteomics/">1. Bioinformatics for Proteomics</a>
+    </li>
+    <li>
+      <a href="TargetDecoyTutorial.html">2.1. Target Decoy QC</a>
+    </li>
+    <li>
+      <a href="pda_tutorialPreprocessing.html">2.2. Quantification - Preprocessing</a>
+    </li>
+    <li>
+      <a href="pda_tutorialDesign.html">2.3. Quantification - Design</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/statOmics/PDA22GTPB">
+    <span class="fab fa-github"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="http://statomics.github.io/">statOmics</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+<li role="separator" class="divider"></li>
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Tutorial: Evaluate pyrococcus searches using uniprot and peptide shaker</h1>
+<h4 class="author">Lieven Clement</h4>
+<address class="author_afil">
+Ghent University<br>
+</div>
+
+
+<div id="load-libraries" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Load Libraries</h1>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(TargetDecoy)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RCurl)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mzID)</span></code></pre></div>
+</div>
+<div id="download-data-in-working-directory" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Download data in working directory</h1>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>( </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">url =</span> <span class="st">&quot;https://raw.githubusercontent.com/statOmics/PDA22GTPB/data/identification/pyroUniprot.mzid&quot;</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">destfile =</span> <span class="st">&quot;pyroUniprot.mzid&quot;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+</div>
+<div id="load-data-in-r" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Load Data in R</h1>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>path2File <span class="ot">&lt;-</span> <span class="st">&quot;pyroUniprot.mzid&quot;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>mzidUniprot <span class="ot">&lt;-</span> <span class="fu">mzID</span>(path2File)</span></code></pre></div>
+<pre><code>## reading pyroUniprot.mzid... DONE!</code></pre>
+</div>
+<div id="launch-the-shiny-gadget" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> Launch the Shiny Gadget</h1>
+<p>Explore the results for search eninge scores to find correct names of search engine scores in the mzID.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evalTargetDecoys</span>(mzidUniprot)</span></code></pre></div>
+</div>
+<div id="evaluate-target-decoy-assumptions" class="section level1" number="5">
+<h1><span class="header-section-number">5</span> Evaluate target decoy assumptions</h1>
+<div id="peptide-shaker" class="section level2" number="5.1">
+<h2><span class="header-section-number">5.1</span> Peptide Shaker</h2>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evalTargetDecoys</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">object =</span> mzidUniprot, </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">decoy =</span> <span class="st">&quot;isdecoy&quot;</span>, </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">score =</span> <span class="st">&quot;peptideshaker psm score&quot;</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">log10 =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<p><img src="mzIDuniprotTutorial_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>We observe that</p>
+<ul>
+<li><p>the histogram shows that Peptide Shaker gives a very good separation between good targets and bad targets.</p></li>
+<li><p>the histogram and PP show that the distribution of bad target peptideshaker PSM scores have the same distribution of decoy peptideshaker PSM scores.</p></li>
+<li><p>The PP-plot shows that the ratio of decoys on targets is a good estimate of the expected fraction of bad target hits that are returned (<span class="math inline">\(\hat\pi_b=\frac{\# \text{decoys}}{\#\text{targets}}\)</span> is a good estimate of the fraction of bad target hits). We can thus assume that it is equaly likely that a bad PSM hit will match to a target sequence or a decoy sequence.</p></li>
+<li><p>It is not really required to assess the assumptions of the search engines used by peptide shaker because there are no problems.</p></li>
+<li><p>For completeness we still evaluate the different search engines used by peptide shaker.</p></li>
+</ul>
+</div>
+<div id="msgf" class="section level2" number="5.2">
+<h2><span class="header-section-number">5.2</span> MSGF+</h2>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evalTargetDecoys</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">object =</span> mzidUniprot, </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">decoy =</span> <span class="st">&quot;isdecoy&quot;</span>, </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">score =</span> <span class="st">&quot;ms-gf:specevalue&quot;</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">log10 =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p><img src="mzIDuniprotTutorial_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<ul>
+<li><p>The plots show that the distribution of the MSGF+ PSM scores are nicely bimodal.</p></li>
+<li><p>The separation between good target PSM scores and bad target PSM scores is less pronounced than for peptide shaker. So it is beneficial to include the other engines with peptideshaker.</p></li>
+<li><p>We do not see deviations from the target decoy assumptions.</p></li>
+</ul>
+</div>
+<div id="omssa" class="section level2" number="5.3">
+<h2><span class="header-section-number">5.3</span> Omssa</h2>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evalTargetDecoys</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">object =</span> mzidUniprot, </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">decoy =</span> <span class="st">&quot;isdecoy&quot;</span>, </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">score =</span> <span class="st">&quot;omssa:evalue&quot;</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">log10 =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p><img src="mzIDuniprotTutorial_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<ul>
+<li><p>The separation between good target PSM scores and bad target PSM scores is less pronounced for omssa than for peptide shaker. So it is beneficial to include the other engines with peptideshaker.</p></li>
+<li><p>We do not see deviations from the target decoy assumptions.</p></li>
+</ul>
+</div>
+<div id="xtandem" class="section level2" number="5.4">
+<h2><span class="header-section-number">5.4</span> X!Tandem</h2>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evalTargetDecoys</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">object =</span> mzidUniprot, </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">decoy =</span> <span class="st">&quot;isdecoy&quot;</span>, </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">score =</span> <span class="st">&quot;x!tandem:expect&quot;</span>,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">log10 =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p><img src="mzIDuniprotTutorial_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<ul>
+<li><p>The separation between good target PSM scores and bad target PSM scores is less pronounced for X!Tandem than for peptide shaker. So it is beneficial to include the other engines with peptideshaker.</p></li>
+<li><p>The decoy PSM score distribution has the same shape as the PSM score distribution of bad targets.</p></li>
+<li><p>There seems to be some evidence that bad PSM hits are more likely to go to target than to decoy sequences. However, this does not lead to problems when combining X!tandem with other engines in peptide shaker.</p></li>
+</ul>
+</div>
+</div>
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiVHV0b3JpYWw6IEV2YWx1YXRlIHB5cm9jb2NjdXMgc2VhcmNoZXMgdXNpbmcgdW5pcHJvdCBhbmQgcGVwdGlkZSBzaGFrZXIiCmF1dGhvcjogCiAgLSBuYW1lOiBMaWV2ZW4gQ2xlbWVudAogICAgYWZmaWxpYXRpb246CiAgICAtIEdoZW50IFVuaXZlcnNpdHkKb3V0cHV0OiAKICAgIGh0bWxfZG9jdW1lbnQ6CiAgICAgIGNvZGVfZG93bmxvYWQ6IHRydWUKICAgICAgdGhlbWU6IGZsYXRseQogICAgICB0b2M6IHRydWUKICAgICAgdG9jX2Zsb2F0OiB0cnVlCiAgICAgIGhpZ2hsaWdodDogdGFuZ28KICAgICAgbnVtYmVyX3NlY3Rpb25zOiB0cnVlCmxpbmtjb2xvcjogYmx1ZQp1cmxjb2xvcjogYmx1ZQpjaXRlY29sb3I6IGJsdWUKLS0tCgojIExvYWQgTGlicmFyaWVzIAoKYGBge3J9CmxpYnJhcnkoVGFyZ2V0RGVjb3kpCmxpYnJhcnkoUkN1cmwpCmxpYnJhcnkobXpJRCkKYGBgCgojIERvd25sb2FkIGRhdGEgaW4gd29ya2luZyBkaXJlY3RvcnkKCmBgYHtyfQpkb3dubG9hZC5maWxlKCAKICB1cmwgPSAiaHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL3N0YXRPbWljcy9QREEyMkdUUEIvZGF0YS9pZGVudGlmaWNhdGlvbi9weXJvVW5pcHJvdC5temlkIiwKICBkZXN0ZmlsZSA9ICJweXJvVW5pcHJvdC5temlkIgogICkKYGBgCgojIExvYWQgRGF0YSBpbiBSCgpgYGB7cn0KcGF0aDJGaWxlIDwtICJweXJvVW5pcHJvdC5temlkIgptemlkVW5pcHJvdCA8LSBteklEKHBhdGgyRmlsZSkKYGBgCgojIExhdW5jaCB0aGUgU2hpbnkgR2FkZ2V0IAoKRXhwbG9yZSB0aGUgcmVzdWx0cyBmb3Igc2VhcmNoIGVuaW5nZSBzY29yZXMgdG8gZmluZCBjb3JyZWN0IG5hbWVzIG9mIHNlYXJjaCBlbmdpbmUgc2NvcmVzIGluIHRoZSBteklELgoKYGBge3IgZXZhbD1GQUxTRX0KZXZhbFRhcmdldERlY295cyhtemlkVW5pcHJvdCkKYGBgCgojIEV2YWx1YXRlIHRhcmdldCBkZWNveSBhc3N1bXB0aW9ucyAKCiMjIFBlcHRpZGUgU2hha2VyCgpgYGB7cn0KZXZhbFRhcmdldERlY295cygKICBvYmplY3QgPSBtemlkVW5pcHJvdCwgCiAgZGVjb3kgPSAiaXNkZWNveSIsIAogIHNjb3JlID0gInBlcHRpZGVzaGFrZXIgcHNtIHNjb3JlIiwKICBsb2cxMCA9IEZBTFNFKQpgYGAKCldlIG9ic2VydmUgdGhhdCAKCi0gdGhlIGhpc3RvZ3JhbSBzaG93cyB0aGF0IFBlcHRpZGUgU2hha2VyIGdpdmVzIGEgdmVyeSBnb29kIHNlcGFyYXRpb24gYmV0d2VlbiBnb29kIHRhcmdldHMgYW5kIGJhZCB0YXJnZXRzLiAKCi0gdGhlIGhpc3RvZ3JhbSBhbmQgUFAgc2hvdyB0aGF0IHRoZSBkaXN0cmlidXRpb24gb2YgYmFkIHRhcmdldCBwZXB0aWRlc2hha2VyIFBTTSBzY29yZXMgaGF2ZSB0aGUgc2FtZSBkaXN0cmlidXRpb24gb2YgZGVjb3kgcGVwdGlkZXNoYWtlciBQU00gc2NvcmVzLgoKLSBUaGUgUFAtcGxvdCBzaG93cyB0aGF0IHRoZSByYXRpbyBvZiBkZWNveXMgb24gdGFyZ2V0cyBpcyBhIGdvb2QgZXN0aW1hdGUgb2YgdGhlIGV4cGVjdGVkIGZyYWN0aW9uIG9mIGJhZCB0YXJnZXQgaGl0cyB0aGF0IGFyZSByZXR1cm5lZCAoJFxoYXRccGlfYj1cZnJhY3tcIyBcdGV4dHtkZWNveXN9fXtcI1x0ZXh0e3RhcmdldHN9fSQgaXMgYSBnb29kIGVzdGltYXRlIG9mIHRoZSBmcmFjdGlvbiBvZiBiYWQgdGFyZ2V0IGhpdHMpLiBXZSBjYW4gdGh1cyBhc3N1bWUgdGhhdCBpdCBpcyBlcXVhbHkgbGlrZWx5IHRoYXQgYSBiYWQgUFNNIGhpdCB3aWxsIG1hdGNoIHRvIGEgdGFyZ2V0IHNlcXVlbmNlIG9yIGEgZGVjb3kgc2VxdWVuY2UuICAKCi0gSXQgaXMgbm90IHJlYWxseSByZXF1aXJlZCB0byBhc3Nlc3MgdGhlIGFzc3VtcHRpb25zIG9mIHRoZSBzZWFyY2ggZW5naW5lcyB1c2VkIGJ5IHBlcHRpZGUgc2hha2VyIGJlY2F1c2UgdGhlcmUgYXJlIG5vIHByb2JsZW1zLiAKCi0gRm9yIGNvbXBsZXRlbmVzcyB3ZSBzdGlsbCBldmFsdWF0ZSB0aGUgZGlmZmVyZW50IHNlYXJjaCBlbmdpbmVzIHVzZWQgYnkgcGVwdGlkZSBzaGFrZXIuIAoKIyMgTVNHRisKCgpgYGB7cn0KZXZhbFRhcmdldERlY295cygKICBvYmplY3QgPSBtemlkVW5pcHJvdCwgCiAgZGVjb3kgPSAiaXNkZWNveSIsIAogIHNjb3JlID0gIm1zLWdmOnNwZWNldmFsdWUiLAogIGxvZzEwID0gVFJVRSkKYGBgCgotIFRoZSBwbG90cyBzaG93IHRoYXQKdGhlIGRpc3RyaWJ1dGlvbiBvZiB0aGUgTVNHRisgUFNNIHNjb3JlcyBhcmUgbmljZWx5IGJpbW9kYWwuIAoKLSBUaGUgc2VwYXJhdGlvbiBiZXR3ZWVuIGdvb2QgdGFyZ2V0IFBTTSBzY29yZXMgYW5kIGJhZCB0YXJnZXQgUFNNIHNjb3JlcyBpcyBsZXNzIHByb25vdW5jZWQgdGhhbiBmb3IgcGVwdGlkZSBzaGFrZXIuIFNvIGl0IGlzIGJlbmVmaWNpYWwgdG8gaW5jbHVkZSB0aGUgb3RoZXIgZW5naW5lcyB3aXRoIHBlcHRpZGVzaGFrZXIuIAoKLSBXZSBkbyBub3Qgc2VlIGRldmlhdGlvbnMgZnJvbSB0aGUgdGFyZ2V0IGRlY295IGFzc3VtcHRpb25zLiAKCiMjIE9tc3NhCgpgYGB7cn0KZXZhbFRhcmdldERlY295cygKICBvYmplY3QgPSBtemlkVW5pcHJvdCwgCiAgZGVjb3kgPSAiaXNkZWNveSIsIAogIHNjb3JlID0gIm9tc3NhOmV2YWx1ZSIsCiAgbG9nMTAgPSBUUlVFKQpgYGAKCgotIFRoZSBzZXBhcmF0aW9uIGJldHdlZW4gZ29vZCB0YXJnZXQgUFNNIHNjb3JlcyBhbmQgYmFkIHRhcmdldCBQU00gc2NvcmVzIGlzIGxlc3MgcHJvbm91bmNlZCBmb3Igb21zc2EgdGhhbiBmb3IgcGVwdGlkZSBzaGFrZXIuIFNvIGl0IGlzIGJlbmVmaWNpYWwgdG8gaW5jbHVkZSB0aGUgb3RoZXIgZW5naW5lcyB3aXRoIHBlcHRpZGVzaGFrZXIuIAoKLSBXZSBkbyBub3Qgc2VlIGRldmlhdGlvbnMgZnJvbSB0aGUgdGFyZ2V0IGRlY295IGFzc3VtcHRpb25zLiAKCiMjIFghVGFuZGVtCgpgYGB7cn0KZXZhbFRhcmdldERlY295cygKICBvYmplY3QgPSBtemlkVW5pcHJvdCwgCiAgZGVjb3kgPSAiaXNkZWNveSIsIAogIHNjb3JlID0gInghdGFuZGVtOmV4cGVjdCIsCiAgbG9nMTAgPSBUUlVFKQpgYGAKCgotIFRoZSBzZXBhcmF0aW9uIGJldHdlZW4gZ29vZCB0YXJnZXQgUFNNIHNjb3JlcyBhbmQgYmFkIHRhcmdldCBQU00gc2NvcmVzIGlzIGxlc3MgcHJvbm91bmNlZCBmb3IgWCFUYW5kZW0gdGhhbiBmb3IgcGVwdGlkZSBzaGFrZXIuIFNvIGl0IGlzIGJlbmVmaWNpYWwgdG8gaW5jbHVkZSB0aGUgb3RoZXIgZW5naW5lcyB3aXRoIHBlcHRpZGVzaGFrZXIuIAoKLSBUaGUgZGVjb3kgUFNNIHNjb3JlIGRpc3RyaWJ1dGlvbiBoYXMgdGhlIHNhbWUgc2hhcGUgYXMgdGhlIFBTTSBzY29yZSBkaXN0cmlidXRpb24gb2YgYmFkIHRhcmdldHMuIAoKLSBUaGVyZSBzZWVtcyB0byBiZSBzb21lIGV2aWRlbmNlIHRoYXQgYmFkIFBTTSBoaXRzIGFyZSBtb3JlIGxpa2VseSB0byBnbyB0byB0YXJnZXQgdGhhbiB0byBkZWNveSBzZXF1ZW5jZXMuIEhvd2V2ZXIsIHRoaXMgZG9lcyBub3QgbGVhZCB0byBwcm9ibGVtcyB3aGVuIGNvbWJpbmluZyBYIXRhbmRlbSB3aXRoIG90aGVyIGVuZ2luZXMgaW4gcGVwdGlkZSBzaGFrZXIuIAo=</div>
+<div class="footer">
+    <hr>
+    This work is licensed under the <a href= "https://creativecommons.org/licenses/by-nc-sa/4.0">
+    CC BY-NC-SA 4.0</a> licence.
+</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("mzIDuniprotTutorial.Rmd");
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
